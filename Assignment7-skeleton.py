@@ -1,7 +1,12 @@
 
 """
-Author: name
-Description
+Author: Travis Jarratt
+CIS 1600 - Assignment 7
+Saint Louis University
+
+A program to anylize test files using the Flesch scale.
+Will take two files as inputs and output various results
+based on user choices.
 """
 
 from functools import reduce
@@ -39,11 +44,11 @@ def word_count(word_list):
     return len(word_list)
 
 
-def grade_level(word_list):
+def grade_level(word_list, word_string):
     # TODO Use the functions above to return grade level
     # Look in section 4-5f in your book at the case study
     words = word_count(word_list)
-    sentences = num_sentences(word_list)
+    sentences = num_sentences(word_string)
     syllables = num_syllables(word_list)
     level = round(0.39 * (words / sentences) + 11.08 * \
                   (syllables / words) - 15.59)
@@ -161,13 +166,13 @@ def run_analysis():
                 else:
                     print("The second file has more words than the first does")
 
-                #value = compare_text(file1_string, file2_string, "density")
+                value = compare_text(file1_string, file2_string, "density")
                 # TODO add code to nicely tell the user what the comparison means
-                print("value")
+                print(value)
 
                 # TODO get results for Grade Level and print them nicely
-                #value = compare_text(file1_string, file2_string, "grade-level")
-                print("value")
+                value = compare_text(file1_string, file2_string, "grade-level")
+                print(value)
 
                 # TODO get results for Fleish Index and print them nicely
                 value = compare_text(file1_string, file2_string, "fleish-index")
