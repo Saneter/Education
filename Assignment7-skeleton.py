@@ -98,7 +98,7 @@ def compare_text(wordstring1, wordstring2, metric):
         c2 = flesch_index(wordlist2, wordstring2)
         val = c1 - c2
     return val
-
+#Testing the Git Shit
 
 def fetch_common_words(word_string1, word_string2):
     wordlist1 = get_word_list_from_string(word_string1)
