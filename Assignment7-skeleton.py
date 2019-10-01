@@ -1,10 +1,8 @@
-
 """
 Author: Travis Jarratt
 CIS 1600 - Assignment 7
 Saint Louis University
-
-A program to anylize test files using the Flesch scale.
+A program to analyze test files using the Flesch scale.
 Will take two files as inputs and output various results
 based on user choices.
 """
@@ -17,8 +15,8 @@ def num_sentences(textStr):
     # This function is complete
     # Pass in a string, not a list
     sentences = textStr.count('.') + textStr.count('?') + \
-                    textStr.count(':') + textStr.count(';') + \
-                    textStr.count('!')
+                textStr.count(':') + textStr.count(';') + \
+                textStr.count('!')
     return sentences
 
 
@@ -45,25 +43,23 @@ def word_count(word_list):
 
 
 def grade_level(word_list, word_string):
-    # TODO Use the functions above to return grade level
-    # Look in section 4-5f in your book at the case study
+    # Computes Grade level
     words = word_count(word_list)
     sentences = num_sentences(word_string)
     syllables = num_syllables(word_list)
-    level = round(0.39 * (words / sentences) + 11.08 * \
-                  (syllables / words) - 15.59)
-    return level  # replace this with a return of a useful value
+    level = int(round(0.39 * (words / sentences) + 11.8 *
+                      (syllables / words) - 15.59))
+    return level
 
 
 def flesch_index(word_list, word_string):
-    # TODO Use the functions above to return the flesch index
-    # Look in section 4-5f in your book at the case study
+    # Computes the Flesch Index
     words = word_count(word_list)
     sentences = num_sentences(word_string)
     syllables = num_syllables(word_list)
     index = 206.835 - 1.015 * (words / sentences) - \
-        84.6 * (syllables / words)
-    return index  # replace this with a return of a useful value
+            84.6 * (syllables / words)
+    return index
 
 
 def get_word_list_from_string(mystring):
@@ -98,7 +94,7 @@ def compare_text(wordstring1, wordstring2, metric):
         c1 = grade_level(wordlist1, wordstring1)
         c2 = grade_level(wordlist2, wordstring2)
         val = c1 - c2
-    elif metric == "fleish-index":
+    elif metric == "flesch-index":
         c1 = flesch_index(wordlist1, wordstring1)
         c2 = flesch_index(wordlist2, wordstring2)
         val = c1 - c2
@@ -114,15 +110,21 @@ def fetch_common_words(word_string1, word_string2):
 
 
 def fetch_unique_words(word_string1, word_string2):
-    # TODO use sets to return all the unique words
     # should return words that are in chunk 1 but not in chunk 2 and
     # those that are in chunk 2 but not in chunk 1
-    pass
+    word_list1 = get_word_list_from_string(word_string1)
+    word_list2 = get_word_list_from_string(word_string2)
+    word_set1 = set(word_list1)
+    word_set2 = set(word_list2)
+    common_set = word_set1 & word_set2
+    joint_set = word_set1 | word_set2
+    joint_set.difference_update(common_set)
+    return joint_set
 
 
 def get_file_string():
     # This function is complete
-    fname = input("Enter the filename of the first file\n")
+    fname = input("Enter the filename of the file\n")
     if not os.path.isfile(fname):
         print("Invalid filename")
         # return None to indicated this did not work
@@ -131,20 +133,20 @@ def get_file_string():
 
 
 def run_analysis():
-    # TODO you have work to do to finish this function
-    print("Welcome to the text analysis program")
+    print("Welcome to the text analysis program.")
 
     while True:
-        print("Here are your options:")
-        print("1. Compare two pieces of text")
-        print("2. Fetch words that have occurred in two pieces of text")
-        print("3. Fetch words that have occurred in only one of two pieces of text")
+        print("Here are your options:\n")
+        print("1. Load text files")
+        print("2. Compare two pieces of text")
+        print("3. Fetch words that have occurred in two pieces of text")
+        print("4. Fetch words that have occurred in only one of two pieces of text")
         print("0. Quit")
-        choice = int(input("Please enter an option:"))
+        choice = int(input("Please enter an option: \n"))
         if choice == 0:
             print("Good bye")
-            return
-        else:
+            exit()
+        elif choice == 1:
             # get the file data from user
             file1_string = get_file_string()
             if file1_string is None:
@@ -152,13 +154,10 @@ def run_analysis():
             file2_string = get_file_string()
             if file2_string is None:
                 continue  # go back and start UI over
-
-            print(num_sentences(file1_string))
-            print(num_sentences(file2_string))
-
-            if choice == 1:  # compare two pieces of text
-                print("\nFile Comparison")
+        elif choice == 2:  # compare two pieces of text
+            try:
                 value = compare_text(file1_string, file2_string, "size")
+                print("\nFile Comparison")
                 if value == 0:
                     print("The files have the same number of words")
                 elif value > 0:
@@ -167,29 +166,57 @@ def run_analysis():
                     print("The second file has more words than the first does")
 
                 value = compare_text(file1_string, file2_string, "density")
-                # TODO add code to nicely tell the user what the comparison means
-                print(value)
+                if value == 0:
+                    print("The files have the same density")
+                elif value > 0:
+                    print("The first file has greater density than the second does")
+                else:
+                    print("The second file has greater density than the first does")
 
-                # TODO get results for Grade Level and print them nicely
                 value = compare_text(file1_string, file2_string, "grade-level")
-                print(value)
+                if value == 0:
+                    print("The files have the same grade level")
+                elif value > 0:
+                    print("The first file has a higher grade level than the second does")
+                else:
+                    print("The second file has higher grade level than the first does")
 
-                # TODO get results for Fleish Index and print them nicely
-                value = compare_text(file1_string, file2_string, "fleish-index")
-                print(value)
+                value = compare_text(file1_string, file2_string, "flesch-index")
+                if value == 0:
+                    print("The files have the same Flesch Index level.")
+                elif value > 0:
+                    print("The second file has a lower Flesch Index level \n"
+                          "and is harder to read than the first.")
+                else:
+                    print("The first file has a lower Flesch Index level \n"
+                          "and is harder to read than the second.")
+            except UnboundLocalError:
+                print("You must enter files before doing this option.\n")
+                return run_analysis()
 
-                print("\n\n")
-            elif choice == 2:
+            print("\n\n")
+        elif choice == 3:
+            try:
                 common_words = fetch_common_words(file1_string, file2_string)
                 print("\nThe two files have these words in common")
                 print(common_words)
                 print("\n\n")
-            elif choice == 3:
+            except UnboundLocalError:
+                print("You must enter files before doing this option.\n")
+                return run_analysis()
+        elif choice == 4:
+            try:
                 unique_words = fetch_unique_words(file1_string, file2_string)
-                print(unique_words)
+                print("The unique words from both files are:")
+                for word in unique_words:
+                    print("{}".format(word))
+                print("\n\n")
+            except UnboundLocalError:
+                print("You must enter files before doing this option.\n")
+                return run_analysis()
 
-            else:
-                pass
+        else:
+            pass
     return
 
 
